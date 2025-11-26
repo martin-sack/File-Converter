@@ -149,6 +149,42 @@ export class ElectronConverterService implements IConverterService {
     };
   }
 
+  async jsonToPdf(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace('.json', '.pdf');
+    
+    const result = await window.electronAPI.jsonToPdf(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
+  async jsonToXlsx(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace('.json', '.xlsx');
+    
+    const result = await window.electronAPI.jsonToXlsx(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
+  async jsonToHtml(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace('.json', '.html');
+    
+    const result = await window.electronAPI.jsonToHtml(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
   async extractText(options: OCROptions): Promise<ConversionResult & { text?: string }> {
     const inputPath = typeof options.file === 'string' ? options.file : (options.file as any).path;
     const outputPath = inputPath.replace(/\.[^.]+$/, '_extracted.txt');
