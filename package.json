@@ -1,78 +1,43 @@
 {
-  "name": "universal-file-converter",
+  "name": "file-converter-web",
   "version": "1.0.0",
-  "description": "Production-ready Universal File Converter",
-  "main": "dist/main.js",
+  "private": true,
+  "description": "Browser-native file converter - Images, Documents, Media, Archives",
   "scripts": {
-    "dev": "concurrently \"npm run dev:main\" \"npm run dev:renderer\"",
-    "dev:main": "tsc -p tsconfig.main.json && electron .",
-    "dev:renderer": "vite",
-    "build": "npm run build:main && npm run build:renderer",
-    "build:main": "tsc -p tsconfig.main.json",
-    "build:renderer": "vite build",
-    "dist": "npm run build && electron-builder",
-    "dist:mac": "npm run build && electron-builder --mac",
-    "dist:win": "npm run build && electron-builder --win"
-  },
-  "keywords": [
-    "electron",
-    "converter",
-    "file-converter"
-  ],
-  "author": "Your Name",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/fluent-ffmpeg": "^2.1.28",
-    "@types/json2csv": "^5.0.7",
-    "@types/node": "^20.10.0",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
-    "@types/showdown": "^2.0.6",
-    "@vitejs/plugin-react": "^4.2.1",
-    "concurrently": "^8.2.2",
-    "electron": "^28.0.0",
-    "electron-builder": "^24.9.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.8"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
-    "csv-parser": "^3.0.0",
-    "ffmpeg-static": "^5.2.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "json2csv": "^6.0.0-alpha.2",
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
+    "browser-image-compression": "^2.0.2",
+    "framer-motion": "^12.23.24",
+    "jspdf": "^3.0.4",
     "jszip": "^3.10.1",
-    "mammoth": "^1.6.0",
-    "path-browserify": "^1.0.1",
+    "lucide-react": "^0.554.0",
+    "next": "16.0.4",
+    "papaparse": "^5.5.3",
     "pdf-lib": "^1.17.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sharp": "^0.33.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-easy-crop": "^5.5.5",
     "showdown": "^2.1.0",
-    "tesseract.js": "^5.0.4"
+    "tesseract.js": "^6.0.1",
+    "xlsx": "^0.18.5"
   },
-  "build": {
-    "appId": "com.yourcompany.fileconverter",
-    "productName": "Universal File Converter",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
-    "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ],
-      "category": "public.app-category.utilities"
-    },
-    "win": {
-      "target": [
-        "nsis",
-        "portable"
-      ]
-    }
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/papaparse": "^5.5.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/showdown": "^2.0.6",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

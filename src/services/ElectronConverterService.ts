@@ -113,6 +113,18 @@ export class ElectronConverterService implements IConverterService {
     };
   }
 
+  async textToPdf(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace(/\.(txt|md)$/, '.pdf');
+    
+    const result = await window.electronAPI.textToPdf(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
   async jsonToCsv(file: File | string): Promise<ConversionResult> {
     const inputPath = typeof file === 'string' ? file : (file as any).path;
     const outputPath = inputPath.replace('.json', '.csv');
@@ -130,6 +142,42 @@ export class ElectronConverterService implements IConverterService {
     const outputPath = inputPath.replace('.csv', '.json');
     
     const result = await window.electronAPI.csvToJson(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
+  async jsonToPdf(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace('.json', '.pdf');
+    
+    const result = await window.electronAPI.jsonToPdf(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
+  async jsonToXlsx(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace('.json', '.xlsx');
+    
+    const result = await window.electronAPI.jsonToXlsx(inputPath, outputPath);
+
+    return {
+      ...result,
+      outputUrl: outputPath
+    };
+  }
+
+  async jsonToHtml(file: File | string): Promise<ConversionResult> {
+    const inputPath = typeof file === 'string' ? file : (file as any).path;
+    const outputPath = inputPath.replace('.json', '.html');
+    
+    const result = await window.electronAPI.jsonToHtml(inputPath, outputPath);
 
     return {
       ...result,

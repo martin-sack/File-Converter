@@ -4,6 +4,13 @@ import { IConverterService } from './IConverterService';
 import { ElectronConverterService } from './ElectronConverterService';
 import { WebConverterService } from './WebConverterService';
 
+// Extend Window interface for Electron API
+declare global {
+  interface Window {
+    electronAPI?: any;
+  }
+}
+
 export class ConverterFactory {
   private static instance: IConverterService | null = null;
 

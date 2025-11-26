@@ -11,6 +11,7 @@ export interface ConversionResult {
 export interface ImageCompressOptions {
   file: File | string;
   targetSizeKB: number;
+  quality?: number;
 }
 
 export interface ImageResizeOptions {
@@ -43,8 +44,12 @@ export interface IConverterService {
   
   // Document operations
   markdownToHtml(file: File | string): Promise<ConversionResult>;
+  textToPdf(file: File | string): Promise<ConversionResult>;
   jsonToCsv(file: File | string): Promise<ConversionResult>;
   csvToJson(file: File | string): Promise<ConversionResult>;
+  jsonToPdf(file: File | string): Promise<ConversionResult>;
+  jsonToXlsx(file: File | string): Promise<ConversionResult>;
+  jsonToHtml(file: File | string): Promise<ConversionResult>;
   
   // OCR
   extractText(options: OCROptions): Promise<ConversionResult & { text?: string }>;
