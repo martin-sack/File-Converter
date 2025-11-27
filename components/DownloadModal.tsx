@@ -111,11 +111,19 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   ];
 
   const handleDownload = (url: string) => {
-    // Trigger direct download
-    window.location.href = url;
+    // Create a temporary anchor element to trigger download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = ''; // This attribute triggers download instead of navigation
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
     
-    // Close modal after triggering download
-    setTimeout(() => onClose(), 500);
+    // Clean up and close modal
+    setTimeout(() => {
+      document.body.removeChild(link);
+      onClose();
+    }, 100);
   };
 
   const getRecommendedDownload = (): string => {
