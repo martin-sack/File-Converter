@@ -23,29 +23,43 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      const platform = (window.navigator as any).userAgentData?.platform?.toLowerCase() || window.navigator.platform.toLowerCase();
+      const platform = navigator.platform.toLowerCase();
+      const ua = navigator.userAgent.toLowerCase();
       
-      // Detect OS
-      if (userAgent.includes('mac') || platform.includes('mac')) {
+      // Detect macOS and architecture
+      if (platform.includes('mac')) {
         setDetectedOS('mac');
-      } else if (userAgent.includes('win') || platform.includes('win')) {
+        // Check for Apple Silicon (M1/M2/M3)
+        if (ua.includes('arm') || ua.includes('apple')) {
+          setDetectedArch('arm64');
+        } else {
+          setDetectedArch('x64');
+        }
+      } 
+      // Detect Windows
+      else if (platform.includes('win')) {
         setDetectedOS('windows');
-      } else if (userAgent.includes('linux') || platform.includes('linux')) {
+        // Detect Windows architecture
+        if (ua.includes('wow64') || ua.includes('win32') || (ua.includes('windows') && !ua.includes('win64'))) {
+          setDetectedArch('ia32');
+        } else {
+          setDetectedArch('x64');
+        }
+      } 
+      // Detect Linux
+      else if (platform.includes('linux')) {
         setDetectedOS('linux');
-      } else {
-        setDetectedOS('windows'); // Default to Windows
-      }
-
-      // Detect Architecture
-      if (userAgent.includes('arm') || userAgent.includes('aarch64')) {
-        setDetectedArch('arm64');
-      } else if (userAgent.includes('x86_64') || userAgent.includes('x64') || userAgent.includes('amd64') || userAgent.includes('win64')) {
+        // Detect Linux architecture
+        if (ua.includes('arm') || ua.includes('aarch64')) {
+          setDetectedArch('arm64');
+        } else {
+          setDetectedArch('x64');
+        }
+      } 
+      // Default fallback
+      else {
+        setDetectedOS('windows');
         setDetectedArch('x64');
-      } else if (userAgent.includes('wow64') || userAgent.includes('win32') || userAgent.includes('i686')) {
-        setDetectedArch('ia32');
-      } else {
-        setDetectedArch('x64'); // Default to x64
       }
     }
   }, []);
