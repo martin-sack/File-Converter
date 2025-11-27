@@ -24,41 +24,45 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   if (!isOpen) return null;
 
   // Direct download URLs from VertFile repository
+  // Note: Update these URLs to match your actual release asset names
   const downloads = [
     {
       os: 'windows',
       name: 'Windows',
       icon: <Monitor className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File-Converter-Pro-win.exe',
+      url: 'https://github.com/martin-sack/VertFile/releases/latest/download/File-Converter-Pro-win.exe',
       recommended: detectedOS === 'windows',
     },
     {
       os: 'mac',
       name: 'macOS',
       icon: <Apple className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File-Converter-Pro-mac.dmg',
+      url: 'https://github.com/martin-sack/VertFile/releases/latest/download/File-Converter-Pro-mac.dmg',
       recommended: detectedOS === 'mac',
     },
     {
       os: 'linux',
       name: 'Linux',
       icon: <Monitor className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File-Converter-Pro-linux.AppImage',
+      url: 'https://github.com/martin-sack/VertFile/releases/latest/download/File-Converter-Pro-linux.AppImage',
       recommended: detectedOS === 'linux',
     },
   ];
 
   const handleDownload = (url: string) => {
-    // Trigger direct download
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = '';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Create a temporary anchor element to trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', '');
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
     
-    // Close modal after triggering download
-    setTimeout(() => onClose(), 500);
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(a);
+      onClose();
+    }, 500);
   };
 
   const handleRecommendedDownload = () => {
