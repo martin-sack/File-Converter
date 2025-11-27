@@ -1,75 +1,165 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Download, Apple, Monitor } from 'lucide-react';
+import { X, Download, Apple, Monitor, Cpu } from 'lucide-react';
 
 interface DownloadModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+type OSType = 'windows' | 'mac' | 'linux' | 'unknown';
+type ArchType = 'x64' | 'arm64' | 'ia32' | 'unknown';
+
+interface DownloadOption {
+  name: string;
+  url: string;
+  description: string;
+}
+
 export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
-  const [detectedOS, setDetectedOS] = useState<'windows' | 'mac' | 'linux'>('windows');
+  const [detectedOS, setDetectedOS] = useState<OSType>('unknown');
+  const [detectedArch, setDetectedArch] = useState<ArchType>('unknown');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const userAgent = window.navigator.userAgent.toLowerCase();
-      if (userAgent.includes('mac')) setDetectedOS('mac');
-      else if (userAgent.includes('win')) setDetectedOS('windows');
-      else if (userAgent.includes('linux')) setDetectedOS('linux');
-      else setDetectedOS('windows'); // Default to Windows if can't detect
+      const platform = (window.navigator as any).userAgentData?.platform?.toLowerCase() || window.navigator.platform.toLowerCase();
+      
+      // Detect OS
+      if (userAgent.includes('mac') || platform.includes('mac')) {
+        setDetectedOS('mac');
+      } else if (userAgent.includes('win') || platform.includes('win')) {
+        setDetectedOS('windows');
+      } else if (userAgent.includes('linux') || platform.includes('linux')) {
+        setDetectedOS('linux');
+      } else {
+        setDetectedOS('windows'); // Default to Windows
+      }
+
+      // Detect Architecture
+      if (userAgent.includes('arm') || userAgent.includes('aarch64')) {
+        setDetectedArch('arm64');
+      } else if (userAgent.includes('x86_64') || userAgent.includes('x64') || userAgent.includes('amd64') || userAgent.includes('win64')) {
+        setDetectedArch('x64');
+      } else if (userAgent.includes('wow64') || userAgent.includes('win32') || userAgent.includes('i686')) {
+        setDetectedArch('ia32');
+      } else {
+        setDetectedArch('x64'); // Default to x64
+      }
     }
   }, []);
 
   if (!isOpen) return null;
 
-  // Direct download URLs from VertFile repository
-  // Note: Update these URLs to match your actual release asset names
-  const downloads = [
+  // Download options by OS
+  const macOptions: DownloadOption[] = [
     {
-      os: 'windows',
-      name: 'Windows',
-      icon: <Monitor className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/VertFile/releases/latest/download/File-Converter-Pro-win.exe',
-      recommended: detectedOS === 'windows',
+      name: 'Apple Silicon (M1/M2/M3)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-mac-arm64.dmg',
+      description: 'For M1, M2, M3 Macs'
     },
     {
-      os: 'mac',
-      name: 'macOS',
-      icon: <Apple className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/VertFile/releases/latest/download/File-Converter-Pro-mac.dmg',
-      recommended: detectedOS === 'mac',
+      name: 'Intel Mac',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-mac-x64.dmg',
+      description: 'For Intel-based Macs'
+    }
+  ];
+
+  const windowsOptions: DownloadOption[] = [
+    {
+      name: 'Windows 64-bit Installer',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-win-x64.exe',
+      description: 'Recommended for most users'
     },
     {
-      os: 'linux',
-      name: 'Linux',
-      icon: <Monitor className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/VertFile/releases/latest/download/File-Converter-Pro-linux.AppImage',
-      recommended: detectedOS === 'linux',
+      name: 'Windows Portable (64-bit)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-win-x64-portable.exe',
+      description: 'No installation required'
     },
+    {
+      name: 'Windows 32-bit Installer',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-win-ia32.exe',
+      description: 'For older 32-bit systems'
+    }
+  ];
+
+  const linuxOptions: DownloadOption[] = [
+    {
+      name: 'AppImage (x64)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-x86_64.AppImage',
+      description: 'Universal Linux package'
+    },
+    {
+      name: 'AppImage (ARM64)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-arm64.AppImage',
+      description: 'For ARM-based systems'
+    },
+    {
+      name: 'Debian/Ubuntu (x64)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-amd64.deb',
+      description: '.deb package'
+    },
+    {
+      name: 'Debian/Ubuntu (ARM64)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-arm64.deb',
+      description: '.deb package for ARM'
+    },
+    {
+      name: 'Fedora/RHEL (x64)',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-x86_64.rpm',
+      description: '.rpm package'
+    }
   ];
 
   const handleDownload = (url: string) => {
-    // Create a temporary anchor element to trigger download
-    const a = document.createElement('a');
-    a.href = url;
-    a.setAttribute('download', '');
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
+    // Trigger direct download
+    window.location.href = url;
     
-    // Clean up
-    setTimeout(() => {
-      document.body.removeChild(a);
-      onClose();
-    }, 500);
+    // Close modal after triggering download
+    setTimeout(() => onClose(), 500);
   };
 
-  const handleRecommendedDownload = () => {
-    const recommended = downloads.find(d => d.recommended);
-    if (recommended) {
-      handleDownload(recommended.url);
+  const getRecommendedDownload = (): string => {
+    if (detectedOS === 'mac') {
+      return detectedArch === 'arm64' ? macOptions[0].url : macOptions[1].url;
+    } else if (detectedOS === 'windows') {
+      return detectedArch === 'ia32' ? windowsOptions[2].url : windowsOptions[0].url;
+    } else if (detectedOS === 'linux') {
+      return detectedArch === 'arm64' ? linuxOptions[1].url : linuxOptions[0].url;
     }
+    return windowsOptions[0].url; // Default
+  };
+
+  const getRecommendedName = (): string => {
+    if (detectedOS === 'mac') {
+      return detectedArch === 'arm64' ? 'macOS Apple Silicon' : 'macOS Intel';
+    } else if (detectedOS === 'windows') {
+      return detectedArch === 'ia32' ? 'Windows 32-bit' : 'Windows 64-bit';
+    } else if (detectedOS === 'linux') {
+      return detectedArch === 'arm64' ? 'Linux ARM64' : 'Linux x64';
+    }
+    return 'Windows 64-bit';
+  };
+
+  const getCurrentOptions = (): DownloadOption[] => {
+    if (detectedOS === 'mac') return macOptions;
+    if (detectedOS === 'windows') return windowsOptions;
+    if (detectedOS === 'linux') return linuxOptions;
+    return [...windowsOptions, ...macOptions, ...linuxOptions]; // Show all if unknown
+  };
+
+  const getOSIcon = () => {
+    if (detectedOS === 'mac') return <Apple className="w-6 h-6" />;
+    if (detectedOS === 'linux') return <Monitor className="w-6 h-6" />;
+    return <Monitor className="w-6 h-6" />;
+  };
+
+  const getOSName = () => {
+    if (detectedOS === 'mac') return 'macOS';
+    if (detectedOS === 'windows') return 'Windows';
+    if (detectedOS === 'linux') return 'Linux';
+    return 'All Platforms';
   };
 
   return (
@@ -85,17 +175,24 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
 
         {/* Header */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Download for Desktop</h2>
-          <p className="text-sm text-zinc-400">Choose your operating system to download</p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 bg-cyan-500/20 text-cyan-400 rounded-lg flex items-center justify-center">
+              {getOSIcon()}
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Download for {getOSName()}</h2>
+              <p className="text-xs text-zinc-500">Detected: {detectedArch === 'arm64' ? 'ARM64' : detectedArch === 'ia32' ? '32-bit' : '64-bit'}</p>
+            </div>
+          </div>
         </div>
 
         {/* Recommended Download Button */}
         <button
-          onClick={handleRecommendedDownload}
+          onClick={() => handleDownload(getRecommendedDownload())}
           className="w-full mb-4 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-cyan-500/50 flex items-center justify-center gap-2"
         >
           <Download className="w-5 h-5" />
-          Download Recommended ({downloads.find(d => d.recommended)?.name})
+          Download Recommended ({getRecommendedName()})
         </button>
 
         <div className="relative mb-4">
@@ -108,34 +205,18 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
         </div>
 
         {/* Download Options */}
-        <div className="space-y-3">
-          {downloads.map((download) => (
+        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+          {getCurrentOptions().map((option, idx) => (
             <button
-              key={download.os}
-              onClick={() => handleDownload(download.url)}
-              className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-xl transition-all group"
+              key={idx}
+              onClick={() => handleDownload(option.url)}
+              className="w-full flex items-center justify-between p-3 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-lg transition-all group"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-cyan-500/20 text-cyan-400 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                  {download.icon}
-                </div>
-                <div className="text-left">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white">{download.name}</span>
-                    {download.recommended && (
-                      <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">
-                        Recommended
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs text-zinc-500">
-                    {download.os === 'windows' && '.exe installer'}
-                    {download.os === 'mac' && '.dmg installer'}
-                    {download.os === 'linux' && '.AppImage'}
-                  </span>
-                </div>
+              <div className="text-left flex-1">
+                <div className="font-semibold text-white text-sm">{option.name}</div>
+                <div className="text-xs text-zinc-500">{option.description}</div>
               </div>
-              <Download className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+              <Download className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors ml-2 flex-shrink-0" />
             </button>
           ))}
         </div>
