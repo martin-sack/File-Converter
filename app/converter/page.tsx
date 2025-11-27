@@ -13,6 +13,7 @@ import {
 import { WebConverterService } from '@/src/services/WebConverterService';
 import { TOOLS, getWebSupportedTools, CATEGORY_LABELS, type ToolCategory } from '@/src/config/tools';
 import * as LucideIcons from 'lucide-react';
+import DownloadModal from '@/components/DownloadModal';
 
 export default function ConverterPage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -22,6 +23,7 @@ export default function ConverterPage() {
   const [result, setResult] = useState<any>(null);
   const [showToolSelector, setShowToolSelector] = useState(false);
   const [isToastMinimized, setIsToastMinimized] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [conversionOptions, setConversionOptions] = useState({
     format: 'webp',
     quality: 0.8,
@@ -665,13 +667,13 @@ export default function ConverterPage() {
                                   {ext?.toUpperCase()} files can only be archived in ZIP format in the web version. 
                                   For advanced conversions like PDF editing or audio processing, download the desktop app.
                                 </p>
-                                <a
-                                  href="https://github.com"
+                                <button
+                                  onClick={() => setIsDownloadModalOpen(true)}
                                   className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-colors"
                                 >
                                   <Download className="w-3.5 h-3.5" />
                                   Get Desktop App
-                                </a>
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -856,17 +858,23 @@ export default function ConverterPage() {
                 <p className="text-zinc-400 text-sm mb-3">
                   200MB max file size. Desktop app has no limits.
                 </p>
-                <a
-                  href="https://github.com"
+                <button
+                  onClick={() => setIsDownloadModalOpen(true)}
                   className="inline-block px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition-colors"
                 >
                   Get Desktop App
-                </a>
+                </button>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Download Modal */}
+      <DownloadModal 
+        isOpen={isDownloadModalOpen} 
+        onClose={() => setIsDownloadModalOpen(false)} 
+      />
     </div>
   );
 }
