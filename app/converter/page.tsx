@@ -422,15 +422,13 @@ export default function ConverterPage() {
                 ))}
               </div>
 
-              <a
-                href="https://github.com/martin-sack/File-Converter/releases/latest"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => setIsDownloadModalOpen(true)}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-amber-500/50 transition-all"
               >
                 <Download className="w-5 h-5" />
                 Download Desktop App (Free)
-              </a>
+              </button>
             </div>
           </motion.div>
         ) : (
