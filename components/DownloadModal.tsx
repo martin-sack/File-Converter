@@ -27,27 +27,27 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
       os: 'windows',
       name: 'Windows',
       icon: <Monitor className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/File-Converter/releases/latest/download/File-Converter-Setup.exe',
+      url: 'https://github.com/martin-sack/File-Converter/releases/latest',
       recommended: detectedOS === 'windows',
     },
     {
       os: 'mac',
       name: 'macOS',
       icon: <Apple className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/File-Converter/releases/latest/download/File-Converter.dmg',
+      url: 'https://github.com/martin-sack/File-Converter/releases/latest',
       recommended: detectedOS === 'mac',
     },
     {
       os: 'linux',
       name: 'Linux',
       icon: <Monitor className="w-6 h-6" />,
-      url: 'https://github.com/martin-sack/File-Converter/releases/latest/download/File-Converter.AppImage',
+      url: 'https://github.com/martin-sack/File-Converter/releases/latest',
       recommended: detectedOS === 'linux',
     },
   ];
 
   const handleDownload = (url: string) => {
-    window.location.href = url;
+    window.open(url, '_blank');
     setTimeout(() => onClose(), 500);
   };
 
@@ -65,7 +65,7 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">Download for Desktop</h2>
-          <p className="text-sm text-zinc-400">Choose your operating system</p>
+          <p className="text-sm text-zinc-400">Select your platform to view available downloads</p>
         </div>
 
         {/* Download Options */}
@@ -90,9 +90,9 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
                     )}
                   </div>
                   <span className="text-xs text-zinc-500">
-                    {download.os === 'windows' && '.exe installer'}
-                    {download.os === 'mac' && '.dmg installer'}
-                    {download.os === 'linux' && '.AppImage'}
+                    {download.os === 'windows' && 'View Windows downloads'}
+                    {download.os === 'mac' && 'View macOS downloads'}
+                    {download.os === 'linux' && 'View Linux downloads'}
                   </span>
                 </div>
               </div>
