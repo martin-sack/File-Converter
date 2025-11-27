@@ -75,16 +75,16 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
 
   if (!isOpen) return null;
 
-  // Download options by OS
+  // Download options by OS - v1.0.1
   const macOptions: DownloadOption[] = [
     {
       name: 'Apple Silicon (M1/M2/M3)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-mac-arm64.dmg',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.1/File.Converter.Pro-1.0.1-mac-arm64.dmg',
       description: 'For M1, M2, M3 Macs'
     },
     {
       name: 'Intel Mac',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-mac-x64.dmg',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.1/File.Converter.Pro-1.0.1-mac-x64.dmg',
       description: 'For Intel-based Macs'
     }
   ];
@@ -92,17 +92,12 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   const windowsOptions: DownloadOption[] = [
     {
       name: 'Windows 64-bit Installer',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-win-x64.exe',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.1/File.Converter.Pro-1.0.1-win-x64.exe',
       description: 'Recommended for most users'
     },
     {
-      name: 'Windows Portable (64-bit)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-win-x64-portable.exe',
-      description: 'No installation required'
-    },
-    {
       name: 'Windows 32-bit Installer',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-win-ia32.exe',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.1/File.Converter.Pro-1.0.1-win-ia32.exe',
       description: 'For older 32-bit systems'
     }
   ];
@@ -110,28 +105,8 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   const linuxOptions: DownloadOption[] = [
     {
       name: 'AppImage (x64)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-x86_64.AppImage',
+      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.1/File.Converter.Pro-1.0.1-linux-x86_64.AppImage',
       description: 'Universal Linux package'
-    },
-    {
-      name: 'AppImage (ARM64)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-arm64.AppImage',
-      description: 'For ARM-based systems'
-    },
-    {
-      name: 'Debian/Ubuntu (x64)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-amd64.deb',
-      description: '.deb package'
-    },
-    {
-      name: 'Debian/Ubuntu (ARM64)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-arm64.deb',
-      description: '.deb package for ARM'
-    },
-    {
-      name: 'Fedora/RHEL (x64)',
-      url: 'https://github.com/martin-sack/VertFile/releases/download/v1.0.0/File.Converter.Pro-1.0.0-linux-x86_64.rpm',
-      description: '.rpm package'
     }
   ];
 
@@ -147,9 +122,9 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
     if (detectedOS === 'mac') {
       return detectedArch === 'arm64' ? macOptions[0].url : macOptions[1].url;
     } else if (detectedOS === 'windows') {
-      return detectedArch === 'ia32' ? windowsOptions[2].url : windowsOptions[0].url;
+      return detectedArch === 'ia32' ? windowsOptions[1].url : windowsOptions[0].url;
     } else if (detectedOS === 'linux') {
-      return detectedArch === 'arm64' ? linuxOptions[1].url : linuxOptions[0].url;
+      return linuxOptions[0].url; // Always x64 AppImage for Linux
     }
     return windowsOptions[0].url; // Default
   };
