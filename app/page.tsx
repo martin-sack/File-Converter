@@ -3,9 +3,12 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { ArrowRight, Download, Sparkles, Layers, Zap, Shield, FileType, Infinity } from 'lucide-react';
+import DownloadModal from '../components/DownloadModal';
 
 export default function LandingPage() {
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const formats = ['JPG', 'PNG', 'MP4', 'MOV', 'PDF', 'DOCX', 'WEBP', 'GIF', 'MP3', 'WAV', 'ZIP', 'RAR', 'CSV', 'JSON', 'HTML', 'MD'];
 
   return (
@@ -109,15 +112,13 @@ export default function LandingPage() {
                   Launch Web App
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <a
-                  href="https://github.com/martin-sack/File-Converter/releases/latest"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => setIsDownloadModalOpen(true)}
                   className="px-8 py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   <Download className="w-5 h-5" />
                   Download for Desktop
-                </a>
+                </button>
               </div>
             </motion.div>
 
@@ -323,6 +324,12 @@ export default function LandingPage() {
           <p>© 2024 Universal File Converter. Open Source & Free Forever.</p>
         </div>
       </footer>
+
+      {/* Download Modal */}
+      <DownloadModal 
+        isOpen={isDownloadModalOpen} 
+        onClose={() => setIsDownloadModalOpen(false)} 
+      />
     </div>
   );
 }
