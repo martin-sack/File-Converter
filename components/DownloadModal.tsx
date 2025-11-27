@@ -30,10 +30,19 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
       if (platform.includes('mac')) {
         setDetectedOS('mac');
         // Check for Apple Silicon (M1/M2/M3)
-        if (ua.includes('arm') || ua.includes('apple')) {
+        // Apple Silicon detection: check for ARM indicators or default to ARM for modern Macs
+        const isAppleSilicon = 
+          ua.includes('arm') || 
+          ua.includes('aarch64') ||
+          // MacIntel is reported even on Apple Silicon in some browsers
+          // So we check for modern Safari features that indicate Apple Silicon
+          (platform === 'macintel' && navigator.maxTouchPoints > 1);
+        
+        if (isAppleSilicon) {
           setDetectedArch('arm64');
         } else {
-          setDetectedArch('x64');
+          // Default to arm64 for modern Macs (most new Macs are Apple Silicon)
+          setDetectedArch('arm64');
         }
       } 
       // Detect Windows
