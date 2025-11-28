@@ -111,13 +111,13 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   ];
 
   const handleDownload = (url: string) => {
-    // Direct navigation to download URL - browser will download the file
-    window.location.href = url;
+    // Open download URL in new tab - GitHub will handle the download
+    window.open(url, '_blank', 'noopener,noreferrer');
     
     // Close modal after triggering download
     setTimeout(() => {
       onClose();
-    }, 500);
+    }, 300);
   };
 
   const getRecommendedDownload = (): string => {
