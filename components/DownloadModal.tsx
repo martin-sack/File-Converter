@@ -111,19 +111,14 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   ];
 
   const handleDownload = (url: string) => {
-    // Create a temporary anchor element to trigger download
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = ''; // This attribute triggers download instead of navigation
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
+    // For cross-origin downloads (GitHub), we need to open in new tab
+    // The browser will automatically download the file instead of displaying it
+    window.open(url, '_blank');
     
-    // Clean up and close modal
+    // Close modal after triggering download
     setTimeout(() => {
-      document.body.removeChild(link);
       onClose();
-    }, 100);
+    }, 300);
   };
 
   const getRecommendedDownload = (): string => {
