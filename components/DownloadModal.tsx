@@ -111,11 +111,18 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   ];
 
   const handleDownload = (url: string) => {
-    // For cross-origin downloads (GitHub), we need to open in new tab
-    // The browser will automatically download the file instead of displaying it
-    window.open(url, '_blank');
+    // Create an invisible iframe to trigger the download without navigation
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
     
-    // Close modal after triggering download
+    // Clean up iframe after download starts
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 2000);
+    
+    // Close modal
     setTimeout(() => {
       onClose();
     }, 300);
