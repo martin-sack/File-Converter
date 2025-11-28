@@ -111,21 +111,13 @@ export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   ];
 
   const handleDownload = (url: string) => {
-    // Create an invisible iframe to trigger the download without navigation
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = url;
-    document.body.appendChild(iframe);
+    // Direct navigation to download URL - browser will download the file
+    window.location.href = url;
     
-    // Clean up iframe after download starts
-    setTimeout(() => {
-      document.body.removeChild(iframe);
-    }, 2000);
-    
-    // Close modal
+    // Close modal after triggering download
     setTimeout(() => {
       onClose();
-    }, 300);
+    }, 500);
   };
 
   const getRecommendedDownload = (): string => {
